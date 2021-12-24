@@ -126,7 +126,7 @@ def run_ml_app() :
         st.subheader('각 컬럼별 통계치')
         st.dataframe(df.describe())
     elif gender == '대전' :
-        st.selectbox('시군구를 입력하세요.', ['동구', '중구','서구'])
+        st.selectbox('시군구를 입력하세요.', ['동구', '중구','서구','유성구','대덕구'])
         st.subheader('각 컬럼별 히스토그램 확인')
 
         selected_column=st.selectbox('컬럼을 선택하세요',df.columns)
@@ -139,8 +139,8 @@ def run_ml_app() :
 
         st.subheader('각 컬럼별 통계치')
         st.dataframe(df.describe())
-    elif gender == '충북' :
-        st.selectbox('시군구를 입력하세요.', ['수원시', '성남시'])
+    elif gender == '전북' :
+        st.selectbox('시군구를 입력하세요.', ['전주시', '군산시','정읍시','남원시','김제시','완주군','무주군','장수군','임실군','순창군','고창군','부안군','익산시'])
         st.subheader('각 컬럼별 히스토그램 확인')
 
         selected_column=st.selectbox('컬럼을 선택하세요',df.columns)
@@ -153,8 +153,8 @@ def run_ml_app() :
 
         st.subheader('각 컬럼별 통계치')
         st.dataframe(df.describe())
-    elif gender == '충북' :
-        st.selectbox('시군구를 입력하세요.', ['수원시', '성남시'])
+    elif gender == '전남' :
+        st.selectbox('시군구를 입력하세요.', ['목포시', '순천시','나주시','광양시','담양군','곡성군','구례군','보성군','장흥군','강진군','무안군','함평군','영광군','장성군'])
         st.subheader('각 컬럼별 히스토그램 확인')
 
         selected_column=st.selectbox('컬럼을 선택하세요',df.columns)
@@ -167,7 +167,76 @@ def run_ml_app() :
 
         st.subheader('각 컬럼별 통계치')
         st.dataframe(df.describe())
+    elif gender == '대구' :
+        st.selectbox('시군구를 입력하세요.', ['동구', '서구','북구','수성구','달서구','달성군'])
+        st.subheader('각 컬럼별 히스토그램 확인')
 
+        selected_column=st.selectbox('컬럼을 선택하세요',df.columns)
+
+        bins=st.slider('bin의 갯수 조절',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('각 컬럼별 통계치')
+        st.dataframe(df.describe())
+    elif gender == '부산' :
+        st.selectbox('시군구를 입력하세요.', ['북구', '해운대구','금정구','강서구','사상구','기장군'])
+        st.subheader('각 컬럼별 히스토그램 확인')
+
+        selected_column=st.selectbox('컬럼을 선택하세요',df.columns)
+
+        bins=st.slider('bin의 갯수 조절',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('각 컬럼별 통계치')
+        st.dataframe(df.describe())
+    elif gender == '울산' :
+        st.selectbox('시군구를 입력하세요.', ['울주군'])
+        st.subheader('각 컬럼별 히스토그램 확인')
+
+        selected_column=st.selectbox('컬럼을 선택하세요',df.columns)
+
+        bins=st.slider('bin의 갯수 조절',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('각 컬럼별 통계치')
+        st.dataframe(df.describe())
+    elif gender == '경북' :
+        st.selectbox('시군구를 입력하세요.', ['목포시', '순천시','나주시','광양시','담양군','곡성군','구례군','보성군','장흥군','강진군','무안군','함평군','영광군','장성군'])
+        st.subheader('각 컬럼별 히스토그램 확인')
+
+        selected_column=st.selectbox('컬럼을 선택하세요',df.columns)
+
+        bins=st.slider('bin의 갯수 조절',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('각 컬럼별 통계치')
+        st.dataframe(df.describe())
+    elif gender == '경남' :
+        st.selectbox('시군구를 입력하세요.', ['목포시', '순천시','나주시','광양시','담양군','곡성군','구례군','보성군','장흥군','강진군','무안군','함평군','영광군','장성군'])
+        st.subheader('각 컬럼별 히스토그램 확인')
+
+        selected_column=st.selectbox('컬럼을 선택하세요',df.columns)
+
+        bins=st.slider('bin의 갯수 조절',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('각 컬럼별 통계치')
+        st.dataframe(df.describe())
     # # 2. 모델에 예측한다.
 
     # # 2-1. 신규데이터를 넘파이로 만든다.
