@@ -1,56 +1,201 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-
+import matplotlib.pyplot as plt
 import joblib
 
 def run_ml_app() :
-    st.subheader('Machine Learning ì˜ˆì¸¡')
+    st.subheader('Machine Learning ¿¹Ãø')
 
-    df = pd.read_csv('data/ë„ë¡œêµí†µ.csv', encoding='CP949')
+    df = pd.read_csv('data/µµ·Î±³Åë.csv', encoding='CP949')
+    df = df.loc[:,'¹ß»ı°Ç¼ö':'ºÎ»ó½Å°í']
+    # 1. À¯ÀúÇÑÅ×, µ¥ÀÌÅÍ¸¦ ÀÔ·Â¹Ş½À´Ï´Ù.
+    gender = st.radio('½Ãµµ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.', ['ÀÎÃµ', '°æ±â','°­¿ø','¼­¿ï','¼¼Á¾','ÃæºÏ','Ãæ³²','±¤ÁÖ','´ëÀü','ÀüºÏ','Àü³²','´ë±¸','ºÎ»ê','¿ï»ê','°æºÏ','°æ³²'])
+    if gender == 'ÀÎÃµ' :
+        st.selectbox('½Ã±º±¸¸¦ ÀÔ·ÂÇÏ¼¼¿ä.', ['Áß±¸', 'µ¿±¸','³²±¸','ºÎÆò±¸','³²µ¿±¸','¼­±¸','¿¬¼ö±¸','°è¾ç±¸'])
+        
+        st.subheader('°¢ ÄÃ·³º° È÷½ºÅä±×·¥ È®ÀÎ')
 
-    # 1. ìœ ì €í•œí…Œ, ë°ì´í„°ë¥¼ ì…ë ¥ë°›ìŠµë‹ˆë‹¤.
-    gender = st.radio('ì„±ë³„ì„ ì…ë ¥í•˜ì„¸ìš”.', ['ë‚¨ì', 'ì—¬ì'])
-    if gender == 'ë‚¨ì' :
-        gender_number = 1
-    elif gender == 'ì—¬ì' :
-        gender_number = 0   
-    print(df.columns)
-    age = st.number_input('ë‚˜ì´ ì…ë ¥', min_value=df['Age'].min(), max_value=df['Age'].max())
-    salary = st.number_input('ì—°ë´‰ ì…ë ¥', min_value=df['Annual Salary'].min(), max_value=df['Annual Salary'].max())
-    debt = st.number_input('ì¹´ë“œ ë¹š ì…ë ¥', min_value= df['Credit Card Debt'].min(), max_value=df['Credit Card Debt'].max())
-    worth = st.number_input('ìì‚° ì…ë ¥', min_value=df['Net Worth'].min(), max_value=df['Net Worth'].max())
+        selected_column=st.selectbox('ÄÃ·³À» ¼±ÅÃÇÏ¼¼¿ä',df.columns)
 
-    print(gender_number, age, salary, debt, worth)    
+        bins=st.slider('binÀÇ °¹¼ö Á¶Àı',min_value=10,max_value=50)
 
-    # 2. ëª¨ë¸ì— ì˜ˆì¸¡í•œë‹¤.
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
 
-    # 2-1. ì‹ ê·œë°ì´í„°ë¥¼ ë„˜íŒŒì´ë¡œ ë§Œë“ ë‹¤.
-    new_data = np.array([gender_number, age, salary, debt, worth])
-    new_data = new_data.reshape(1, 5)
+        st.subheader('°¢ ÄÃ·³º° Åë°èÄ¡')
+        st.dataframe(df.describe())
 
-    # 2-2. ìŠ¤ì¼€ì¼ëŸ¬ì™€ ì¸ê³µì§€ëŠ¥ì„ ë³€ìˆ˜ë¡œ ë¶ˆëŸ¬ì˜¨ë‹¤.
-    scaler_X = joblib.load('data/scaler_X.pkl')
-    scaler_y = joblib.load('data/scaler_y.pkl')
-    regressor = joblib.load('data/regressor.pkl')
+    elif gender == '°æ±â' :
+        st.selectbox('½Ã±º±¸¸¦ ÀÔ·ÂÇÏ¼¼¿ä.', ['¼ö¿ø½Ã', '¼º³²½Ã','ÀÇÁ¤ºÎ½Ã','¾È¾ç½Ã','ºÎÃµ½Ã','¾È»ê½Ã','ÆòÅÃ½Ã','±¤¸í½Ã','±¸¸®½Ã','¾çÁÖ½Ã','¿©ÁÖ½Ã','È­¼º½Ã','½ÃÈï½Ã','°í¾ç½Ã','±¤ÁÖ½Ã','Æ÷Ãµ½Ã','°¡Æò±º','¾çÆò±º','ÀÌÃµ½Ã','¿ëÀÎ½Ã','¾È¼º½Ã','±èÆ÷½Ã','±ºÆ÷½Ã','³²¾çÁÖ½Ã','¿À»ê½Ã','ÀÇ¿Õ½Ã','ÇÏ³²½Ã'])
+        st.subheader('°¢ ÄÃ·³º° È÷½ºÅä±×·¥ È®ÀÎ')
 
-    # 2-3. ì‹ ê·œë°ì´í„°ë¥¼ í”¼ì³ìŠ¤ì¼€ì¼ë§ í•œë‹¤.
-    new_data = scaler_X.transform(new_data)
+        selected_column=st.selectbox('ÄÃ·³À» ¼±ÅÃÇÏ¼¼¿ä',df.columns)
 
-    # 2-4. ì¸ê³µì§€ëŠ¥ì—ê²Œ ì˜ˆì¸¡ì„ í•˜ê²Œ í•œë‹¤.
-    y_pred = regressor.predict(new_data)
+        bins=st.slider('binÀÇ °¹¼ö Á¶Àı',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('°¢ ÄÃ·³º° Åë°èÄ¡')
+        st.dataframe(df.describe())
+    elif gender == '°­¿ø' :
+        st.selectbox('½Ã±º±¸¸¦ ÀÔ·ÂÇÏ¼¼¿ä.', ['ÃáÃµ½Ã', '¿øÁÖ½Ã','µ¿ÇØ½Ã','°­¸ª½Ã','¼ÓÃÊ½Ã','È«Ãµ±º','È¾¼º±º','ÆòÃ¢±º','ÀÎÁ¦±º','¾ç¾ç±º'])
+        st.subheader('°¢ ÄÃ·³º° È÷½ºÅä±×·¥ È®ÀÎ')
+
+        selected_column=st.selectbox('ÄÃ·³À» ¼±ÅÃÇÏ¼¼¿ä',df.columns)
+
+        bins=st.slider('binÀÇ °¹¼ö Á¶Àı',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('°¢ ÄÃ·³º° Åë°èÄ¡')
+        st.dataframe(df.describe())
+    elif gender == '¼­¿ï' :
+        st.selectbox('½Ã±º±¸¸¦ ÀÔ·ÂÇÏ¼¼¿ä.', ['¼ººÏ±¸', '°­¼­±¸','°­³²±¸','°­µ¿±¸','¼ÛÆÄ±¸','¼­ÃÊ±¸','¾çÃµ±¸','Áß¶û±¸','³ë¿ø±¸','±İÃµ±¸'])
+        st.subheader('°¢ ÄÃ·³º° È÷½ºÅä±×·¥ È®ÀÎ')
+
+        selected_column=st.selectbox('ÄÃ·³À» ¼±ÅÃÇÏ¼¼¿ä',df.columns)
+
+        bins=st.slider('binÀÇ °¹¼ö Á¶Àı',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('°¢ ÄÃ·³º° Åë°èÄ¡')
+        st.dataframe(df.describe())
+    elif gender == '¼¼Á¾' :
+        st.selectbox('½Ã±º±¸¸¦ ÀÔ·ÂÇÏ¼¼¿ä.', ['¼¼Á¾'])
+        st.subheader('°¢ ÄÃ·³º° È÷½ºÅä±×·¥ È®ÀÎ')
+
+        selected_column=st.selectbox('ÄÃ·³À» ¼±ÅÃÇÏ¼¼¿ä',df.columns)
+
+        bins=st.slider('binÀÇ °¹¼ö Á¶Àı',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('°¢ ÄÃ·³º° Åë°èÄ¡')
+        st.dataframe(df.describe())
+    elif gender == 'ÃæºÏ' :
+        st.selectbox('½Ã±º±¸¸¦ ÀÔ·ÂÇÏ¼¼¿ä.', ['Ã»ÁÖ½Ã', 'ÃæÁÖ½Ã','Á¦Ãµ½Ã','º¸Àº±º','¿ÁÃµ±º','¿µµ¿±º','ÁøÃµ±º','±«»ê±º','À½¼º±º','´Ü¾ç±º','ÁõÆò±º'])
+        st.subheader('°¢ ÄÃ·³º° È÷½ºÅä±×·¥ È®ÀÎ')
+
+        selected_column=st.selectbox('ÄÃ·³À» ¼±ÅÃÇÏ¼¼¿ä',df.columns)
+
+        bins=st.slider('binÀÇ °¹¼ö Á¶Àı',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('°¢ ÄÃ·³º° Åë°èÄ¡')
+        st.dataframe(df.describe())
+    elif gender == 'Ãæ³²' :
+        st.selectbox('½Ã±º±¸¸¦ ÀÔ·ÂÇÏ¼¼¿ä.', ['Ãµ¾È½Ã', 'º¸·É½Ã','°øÁÖ½Ã','¼­»ê½Ã','±İ»ê±º','³í»ê½Ã','ºÎ¿©±º','¼­Ãµ±º','Ã»¾ç±º','È«¼º±º','¿¹»ê±º','´çÁø½Ã','°è·æ½Ã'])
+        st.subheader('°¢ ÄÃ·³º° È÷½ºÅä±×·¥ È®ÀÎ')
+
+        selected_column=st.selectbox('ÄÃ·³À» ¼±ÅÃÇÏ¼¼¿ä',df.columns)
+
+        bins=st.slider('binÀÇ °¹¼ö Á¶Àı',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('°¢ ÄÃ·³º° Åë°èÄ¡')
+        st.dataframe(df.describe())
+    elif gender == '±¤ÁÖ' :
+        st.selectbox('½Ã±º±¸¸¦ ÀÔ·ÂÇÏ¼¼¿ä.', ['ºÏ±¸', '±¤»ê±¸'])
+        st.subheader('°¢ ÄÃ·³º° È÷½ºÅä±×·¥ È®ÀÎ')
+
+        selected_column=st.selectbox('ÄÃ·³À» ¼±ÅÃÇÏ¼¼¿ä',df.columns)
+
+        bins=st.slider('binÀÇ °¹¼ö Á¶Àı',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('°¢ ÄÃ·³º° Åë°èÄ¡')
+        st.dataframe(df.describe())
+    elif gender == '´ëÀü' :
+        st.selectbox('½Ã±º±¸¸¦ ÀÔ·ÂÇÏ¼¼¿ä.', ['µ¿±¸', 'Áß±¸','¼­±¸'])
+        st.subheader('°¢ ÄÃ·³º° È÷½ºÅä±×·¥ È®ÀÎ')
+
+        selected_column=st.selectbox('ÄÃ·³À» ¼±ÅÃÇÏ¼¼¿ä',df.columns)
+
+        bins=st.slider('binÀÇ °¹¼ö Á¶Àı',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('°¢ ÄÃ·³º° Åë°èÄ¡')
+        st.dataframe(df.describe())
+    elif gender == 'ÃæºÏ' :
+        st.selectbox('½Ã±º±¸¸¦ ÀÔ·ÂÇÏ¼¼¿ä.', ['¼ö¿ø½Ã', '¼º³²½Ã'])
+        st.subheader('°¢ ÄÃ·³º° È÷½ºÅä±×·¥ È®ÀÎ')
+
+        selected_column=st.selectbox('ÄÃ·³À» ¼±ÅÃÇÏ¼¼¿ä',df.columns)
+
+        bins=st.slider('binÀÇ °¹¼ö Á¶Àı',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('°¢ ÄÃ·³º° Åë°èÄ¡')
+        st.dataframe(df.describe())
+    elif gender == 'ÃæºÏ' :
+        st.selectbox('½Ã±º±¸¸¦ ÀÔ·ÂÇÏ¼¼¿ä.', ['¼ö¿ø½Ã', '¼º³²½Ã'])
+        st.subheader('°¢ ÄÃ·³º° È÷½ºÅä±×·¥ È®ÀÎ')
+
+        selected_column=st.selectbox('ÄÃ·³À» ¼±ÅÃÇÏ¼¼¿ä',df.columns)
+
+        bins=st.slider('binÀÇ °¹¼ö Á¶Àı',min_value=10,max_value=50)
+
+        fig1=plt.figure()
+        df[selected_column].hist(bins=bins)
+        st.pyplot(fig1)
+
+        st.subheader('°¢ ÄÃ·³º° Åë°èÄ¡')
+        st.dataframe(df.describe())
+
+    # # 2. ¸ğµ¨¿¡ ¿¹ÃøÇÑ´Ù.
+
+    # # 2-1. ½Å±Ôµ¥ÀÌÅÍ¸¦ ³ÑÆÄÀÌ·Î ¸¸µç´Ù.
+    # new_data = np.array([gender_number, age, salary, debt, worth])
+    # new_data = new_data.reshape(1, 5)
+
+    # # 2-2. ½ºÄÉÀÏ·¯¿Í ÀÎ°øÁö´ÉÀ» º¯¼ö·Î ºÒ·¯¿Â´Ù.
+    # scaler_X = joblib.load('data/scaler_X.pkl')
+    # scaler_y = joblib.load('data/scaler_y.pkl')
+    # regressor = joblib.load('data/regressor.pkl')
+
+    # # 2-3. ½Å±Ôµ¥ÀÌÅÍ¸¦ ÇÇÃÄ½ºÄÉÀÏ¸µ ÇÑ´Ù.
+    # new_data = scaler_X.transform(new_data)
+
+    # # 2-4. ÀÎ°øÁö´É¿¡°Ô ¿¹ÃøÀ» ÇÏ°Ô ÇÑ´Ù.
+    # y_pred = regressor.predict(new_data)
     
-    # 2-5. ì˜ˆì¸¡í•œ ê²°ê³¼ëŠ”, ë‹¤ì‹œ ì›ë˜ëŒ€ë¡œ ë³µêµ¬í•´ ì¤˜ì•¼ í•œë‹¤. 
-    print(y_pred)
+    # # 2-5. ¿¹ÃøÇÑ °á°ú´Â, ´Ù½Ã ¿ø·¡´ë·Î º¹±¸ÇØ Áà¾ß ÇÑ´Ù. 
+    # print(y_pred)
 
-    y_pred = scaler_y.inverse_transform(y_pred.reshape(1,1))
-    print(y_pred)
+    # y_pred = scaler_y.inverse_transform(y_pred.reshape(1,1))
+    # print(y_pred)
 
-    # 3. ì˜ˆì¸¡ ê²°ê³¼ë¥¼ ì›¹ ëŒ€ì‹œë³´ë“œì— í‘œì‹œí•œë‹¤.
+    # # 3. ¿¹Ãø °á°ú¸¦ À¥ ´ë½Ãº¸µå¿¡ Ç¥½ÃÇÑ´Ù.
 
-    btn = st.button('ì˜ˆì¸¡ ê²°ê³¼ ë³´ê¸°')
-    # ê²°ê³¼ê°€ ì†Œìˆ˜ì ìœ¼ë¡œ ë‚˜ì˜¤ëŠ”ë°, ì†Œìˆ˜ì  ë’¤ í•œìë¦¬ê¹Œì§€ë§Œ ë‚˜ì˜¤ë„ë¡
-    # ì½”ë“œ ìˆ˜ì •í•˜ì„¸ìš”.
-    if btn :
-        st.write('ì˜ˆì¸¡ ê²°ê³¼! {:.1f} ë‹¬ëŸ¬ì˜ ì°¨ë¥¼ ì‚´ ìˆ˜ ìˆìŠµë‹ˆë‹¤.'.format(y_pred[0,0]))
-        st.write('ì˜ˆì¸¡ ê²°ê³¼! {} ë‹¬ëŸ¬ì˜ ì°¨ë¥¼ ì‚´ ìˆ˜ ìˆìŠµë‹ˆë‹¤.'.format( round(y_pred[0,0], 1) ))
+    # btn = st.button('¿¹Ãø °á°ú º¸±â')
+    # # °á°ú°¡ ¼Ò¼öÁ¡À¸·Î ³ª¿À´Âµ¥, ¼Ò¼öÁ¡ µÚ ÇÑÀÚ¸®±îÁö¸¸ ³ª¿Àµµ·Ï
+    # # ÄÚµå ¼öÁ¤ÇÏ¼¼¿ä.
+    # if btn :
+    #     st.write('¿¹Ãø °á°ú! {:.1f} ´Ş·¯ÀÇ Â÷¸¦ »ì ¼ö ÀÖ½À´Ï´Ù.'.format(y_pred[0,0]))
+    #     st.write('¿¹Ãø °á°ú! {} ´Ş·¯ÀÇ Â÷¸¦ »ì ¼ö ÀÖ½À´Ï´Ù.'.format( round(y_pred[0,0], 1) ))
